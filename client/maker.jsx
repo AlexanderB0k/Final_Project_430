@@ -10,7 +10,7 @@ const handlebar = (e, onAdded) => {
     const name = e.target.querySelector('#name').value;
     const age = e.target.querySelector('#age').value;
 
-    if (!name || !age) {
+    if (!name || !star || !origin || !something) {
         helper.handleError('All fields are required!');
         return false;
     }
@@ -31,9 +31,11 @@ const handleForm = (props) => {
         >
             <label htmlFor="name">Name: </label>
             <input id="name" type="text" name="name" placeholder="Rating Name" />
-            <label htmlFor="age">Age: </label>
-            <input id="age" type="number" min="0" name="age" />
+            <label htmlFor="age">Star Rating: </label>
+            <input id="star" type="number" min="0" max= "5" name="star" />
             <input className="makeSubmit" type="submit" value="Make Rating" />
+            <label htmlFor="origin">Restuarant name</label>
+            <
         </form>
     );
 }
