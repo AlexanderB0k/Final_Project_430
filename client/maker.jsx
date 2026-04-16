@@ -3,7 +3,7 @@ const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
-const handlebar = async (e, onAdded) => {
+const handleRating = async (e, onAdded) => {
     e.preventDefault();
     helper.hideError();
 
@@ -20,15 +20,12 @@ const handlebar = async (e, onAdded) => {
     const uploadData = new FormData();
     uploadData.append('sampleFile', photoFile);
 
-    let uploadResult;
-
-
     const uploadResponse = await fetch('/upload', {
         method: 'POST',
         body: uploadData,
     });
 
-    uploadResult = await uploadResponse.json();
+    const uploadResult = await uploadResponse.json();
 
     if (!uploadResponse.ok) {
         helper.handleError(uploadResult.error || 'Image upload failed');
@@ -47,10 +44,9 @@ const handlebar = async (e, onAdded) => {
     );
 
     return false;
+};
 
-}
-
-const handleForm = (props) => {
+const HandleForm = (props) => {
     return (
         <form
             id="form"
@@ -87,9 +83,9 @@ const handleForm = (props) => {
             <input className="makeSubmit" type="submit" value="Make Rating" />
         </form>
     );
-}
+};
 
-const createList = (props) => {
+const CreateList = (props) => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -100,8 +96,8 @@ const createList = (props) => {
         };
 
         loadFromServer();
-
     }, [props.reloadRatings]);
+
     if (items.length === 0) {
         return (
             <div className="list">
@@ -109,6 +105,7 @@ const createList = (props) => {
             </div>
         );
     }
+
     const nodes = items.map((rating) => {
         return (
             <div key={rating._id} className="rating">
@@ -123,12 +120,13 @@ const createList = (props) => {
             </div>
         );
     });
+
     return (
         <div className="list">
             {nodes}
         </div>
     );
-}
+};
 
 const App = () => {
     const [reload, setReload] = useState(false);
@@ -148,6 +146,6 @@ const App = () => {
 const init = () => {
     const root = createRoot(document.getElementById('app'));
     root.render(<App />);
-}
+};
 
 window.onload = init;
