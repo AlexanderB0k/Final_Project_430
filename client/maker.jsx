@@ -3,39 +3,88 @@ const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
-const handlebar = (e, onAdded) => {
+const handlebar = async (e, onAdded) => {
     e.preventDefault();
     helper.hideError();
 
     const name = e.target.querySelector('#name').value;
-    const age = e.target.querySelector('#age').value;
+    const originFood = e.target.querySelector('#originFood').value;
+    const starRating = e.target.querySelector('#starRating').value;
+    const photoFile = e.target.querySelector('#photo').files[0];
 
-    if (!name || !star || !origin || !something) {
+    if (!name || !originFood || !starRating || !photoFile) {
         helper.handleError('All fields are required!');
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, age }, onAdded);
+    const uploadData = new FormData();
+    uploadData.append('sampleFile', photoFile);
+
+    let uploadResult;
+
+
+    const uploadResponse = await fetch('/upload', {
+        method: 'POST',
+        body: uploadData,
+    });
+
+    uploadResult = await uploadResponse.json();
+
+    if (!uploadResponse.ok) {
+        helper.handleError(uploadResult.error || 'Image upload failed');
+        return false;
+    }
+
+    helper.sendPost(
+        e.target.action,
+        {
+            name,
+            originFood,
+            starRating,
+            photo: uploadResult.fileId,
+        },
+        onAdded
+    );
+
     return false;
 
 }
 
 const handleForm = (props) => {
     return (
-        <form id="form"
-            onSubmit={(e) => handlebar(e, props.triggerReload)}
+        <form
+            id="form"
+            onSubmit={(e) => handleRating(e, props.triggerReload)}
             name="form"
             action="/maker"
             method="POST"
             className="form"
         >
             <label htmlFor="name">Name: </label>
-            <input id="name" type="text" name="name" placeholder="Rating Name" />
-            <label htmlFor="age">Star Rating: </label>
-            <input id="star" type="number" min="0" max= "5" name="star" />
+            <input id="name" type="text" name="name" placeholder="Food Name" />
+
+            <label htmlFor="originFood">Origin of the Food: </label>
+            <input
+                id="originFood"
+                type="text"
+                name="originFood"
+                placeholder="Restaurant or Country"
+            />
+
+            <label htmlFor="starRating">Star Rating: </label>
+            <input
+                id="starRating"
+                type="number"
+                min="0"
+                max="5"
+                name="starRating"
+                placeholder="0 to 5"
+            />
+
+            <label htmlFor="photo">Photo: </label>
+            <input id="photo" type="file" name="photo" accept="image/*" />
+
             <input className="makeSubmit" type="submit" value="Make Rating" />
-            <label htmlFor="origin">Restuarant name</label>
-            <
         </form>
     );
 }
@@ -60,16 +109,20 @@ const createList = (props) => {
             </div>
         );
     }
-    const nodes = items.map((ratings) => {      
+    const nodes = items.map((rating) => {
         return (
-            <div key={ratings.id} className="rating">
-                <img src="/assets/img/domoface.jpeg" alt="rating face" className="ratingFace" />
-                <h3 className="ratingName">Name: {ratings.name}</h3>
-                <h3 className="ratingAge">Age: {ratings.age}</h3>
+            <div key={rating._id} className="rating">
+                <img
+                    src={`/retrieve?_id=${rating.photo}`}
+                    alt={rating.name}
+                    className="ratingFace"
+                />
+                <h3>Name: {rating.name}</h3>
+                <h3>Origin: {rating.originFood}</h3>
+                <h3>Star Rating: {rating.starRating}</h3>
             </div>
         );
     });
-
     return (
         <div className="list">
             {nodes}
@@ -83,14 +136,14 @@ const App = () => {
     return (
         <div>
             <div id="makeRating">
-                {handleForm({ triggerReload: () => setReload(!reload) })}
+                <HandleForm triggerReload={() => setReload(!reload)} />
             </div>
             <div id="ratings">
-                {createList({ reloadRatings: reload })}
+                <CreateList reloadRatings={reload} />
             </div>
         </div>
     );
-}
+};
 
 const init = () => {
     const root = createRoot(document.getElementById('app'));

@@ -5,38 +5,38 @@ const setName = (name) => _.escape(name).trim();
 
 //Created a rating system with 
 const Schema = new mongoose.Schema({
-    //reminder: This is the name of the food
     name: {
         type: String,
         required: true,
         trim: true,
         set: setName,
     },
+
+    originFood: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+
+    photo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'FileModel',
+        required: true,
+    },
+
+    starRating: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 5,
+    },
+
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Account',
     },
-    OriginFood: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    starRating: {
-        type: Number,
-        min: 0,
-        max: 5, 
-    },
-    image: {
-        type: String,
-        data: Buffer,   
-        contentType: String, 
-    },
-    desscription: {
-        type: String,
-        required: true,
-        trim: true,
-    },
+
     createdDate: {
         type: Date,
         default: Date.now,
@@ -44,10 +44,13 @@ const Schema = new mongoose.Schema({
 });
 
 Schema.statics.toAPI = (doc) => ({
+    _id: doc._id,
     name: doc.name,
-    origin: doc.OriginFood,
-    image: doc.image,
-    rating: doc.starRating,
+    originFood: doc.originFood,
+    photo: doc.photo,
+    starRating: doc.starRating,
+    owner: doc.owner,
+    createdDate: doc.createdDate,
 });
 
 const RatingModel = mongoose.model('Rating', Schema);

@@ -14,9 +14,9 @@ const router = (app) => {
     app.get('/maker', mid.requiresLogin, controllers.Rating.makerPage);
     app.post('/maker', mid.requiresLogin, controllers.Rating.makeRating);
 
-    app.post('/upload', controllers.imageupload.uploadFile);
+    app.post('/upload', mid.requiresLogin, controllers.FileModel.uploadFile);
 
-    app.get('/retrieve', controllers.imageupload.retrieveFile);
+    app.get('/retrieve', mid.requiresLogin, controllers.FileModel.retrieveFile);
 
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

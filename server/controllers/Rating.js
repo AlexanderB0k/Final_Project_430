@@ -2,20 +2,22 @@ const models = require('../models');
 const Rating = models.Rating;
 
 const makeRating = async (req, res) => {
-    if (!req.body.name || !req.body.age) {
-        return res.status(400).json({ error: 'Name and age are required' });
+    if (!req.body.name || !req.body.originFood || !req.body.starRating || !req.body.photo) {
+        return res.status(400).json({ error: 'All fields are required' });
     }
 
     const ratingData = {
         name: req.body.name,
-        age: req.body.age,
+        originFood: req.body.originFood,
+        starRating: req.body.starRating,
+        photo: req.body.photo,
         owner: req.session.account._id,
     };
 
     try {
-        const newRating = new Rating (ratingData);
+        const newRating = new Rating(ratingData);
         await newRating.save();
-        return res.status(201).json({name: newRating.name, age: newRating.age});
+        return res.status(201).json({ name: newRating.name, originFood: newRating.originFood, starRating: newRating.starRating, photo: newRating.photo });
     } catch (err) {
         console.error(err);
         if (err.code === 11000) {
@@ -32,7 +34,7 @@ const makerPage = (req, res) => {
 const getRatings = async (req, res) => {
     try {
         const query = { owner: req.session.account._id };
-        const docs = await Rating.find(query).select('name age').lean().exec();
+        const docs = await Rating.find(query).select('name originFood starRating photo').lean().exec();
         return res.json({ ratings: docs });
     } catch (err) {
         console.error(err);

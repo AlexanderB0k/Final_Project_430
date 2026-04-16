@@ -5,12 +5,15 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f8fb;
 }
 
 #logo {
     height: 40px;
-    width: 40;
+    width: 40px;
     padding-top: 5px;
+    padding-left: 10px;
     float: left;
     border-radius: 8px;
 }
@@ -21,16 +24,12 @@ nav {
     background-color: #55acee;
 }
 
-nav:nth-child(1) {
-    padding-left: 25px;
-}
-
 .navlink {
     padding: 5px;
     padding-top: 12px;
     padding-left: 20px;
     color: white;
-    font-size: 1.3em;
+    font-size: 1.1em;
     float: left;
 }
 
@@ -41,68 +40,78 @@ nav:nth-child(1) {
 .navlink a:active {
     color: white;
     text-decoration: none;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 4px;
     background-color: #55acee;
     transition: background-color 0.4s ease;
 }
 
 .navlink a:hover {
-    transition: background-color 0.8s ease;
     background-color: #66bdff;
 }
 
 .form {
-    border: 2px solid #338acc;
-    height: 35px;
-    width: 700px;
-    margin-top: 0px;
-    padding-top: 10px;
+    width: 750px;
+    margin: 30px auto;
+    padding: 20px;
     background-color: #55acee;
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
+    border: 2px solid #338acc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .form label {
-    display: inline-block;
-    width: 75px;
-    margin-left: 10px;
-    font-size: 1.2em;
-    float: left;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 1.1em;
     color: white;
+    font-weight: bold;
 }
 
-.form input[type=text] {
-    float: left;
+.form input[type=text],
+.form input[type=number],
+.form input[type=file] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.form input[type=text]:focus,
+.form input[type=number]:focus,
+.form input[type=file]:focus {
+    outline: none;
+    box-shadow: 0px 0px 2px 2px #d6ecff;
 }
 
 .makeSubmit {
     transition: background-color 0.4s ease;
-    display: inline;
-    width: 90px;
-    background-color: #55acee;
-    border-radius: 2px;
+    display: block;
+    width: 160px;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #338acc;
+    border: none;
+    border-radius: 6px;
     color: white;
-    text-decoration: none;
-}
-
-.makeSubmit:link,
-.makeSubmit:visited,
-.makeSubmit:hover,
-.makeSubmit:active {
-    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .makeSubmit:hover {
-    transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: #2673ad;
 }
 
 .mainForm {
     height: 300px;
     width: 350px;
     margin: 0 auto;
-    padding-top: 350px;
+    padding-top: 150px;
     font-size: 1.2em;
 }
 
@@ -122,27 +131,19 @@ nav:nth-child(1) {
     transition: background-color 0.4s ease;
     display: block;
     text-align: center;
-    margin: 0 auto;
-    margin-top: 14px;
+    margin: 14px auto 0 auto;
     font-size: 1.2em;
-    width: 100px;
+    width: 120px;
     background-color: #55acee;
-    border-radius: 2px;
-    border-color: #66acee;
-    padding: 3px 0px;
+    border-radius: 4px;
+    border: none;
+    padding: 8px 0px;
     color: white;
     text-decoration: none;
-}
-
-.formSubmit:link,
-.formSubmit:visited,
-.formSubmit:hover,
-.formSubmit:active {
-    color: white;
+    cursor: pointer;
 }
 
 .formSubmit:hover {
-    transition: background-color 0.4s ease;
     background-color: #338acc;
 }
 
@@ -153,6 +154,7 @@ nav:nth-child(1) {
     font-size: 1.1em;
     width: 180px;
     border-radius: 6px;
+    padding: 6px;
 }
 
 #user:focus,
@@ -167,7 +169,7 @@ nav:nth-child(1) {
 }
 
 #Message {
-    top: 250px;
+    top: 120px;
     width: 250px;
     height: 650px;
     position: absolute;
@@ -190,7 +192,7 @@ nav:nth-child(1) {
 }
 
 #errorMessage {
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
     color: red;
     font-style: italic;
@@ -202,73 +204,57 @@ nav:nth-child(1) {
     margin-left: 135px;
     height: 450px;
     width: 300px;
-    -ms-transform: rotate(330deg);
-    -webkit-transform: rotate(330deg);
     transform: rotate(330deg);
 }
 
-#imgs {
-    width: 40%;
+.list {
+    width: 80%;
     min-width: 400px;
-    border: 2px solid #55acee;
-    border-radius: 4px;
-    margin: 0 auto;
-    margin-top: 100px;
+    margin: 20px auto;
 }
 
 .rating {
-    width: 95%;
-    margin: 0 auto;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    width: 100%;
+    margin: 12px auto;
     border: 2px solid #55acee;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: #55acee;
-    padding: 10px;
-    min-height: 60px;
+    padding: 15px;
+    min-height: 120px;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .rating:hover {
-    transition: border-color 0.2s ease-out;
     border-color: rgba(255, 255, 255, 0.8);
-    transition: background-color 2.6s ease-out;
     background-color: #66bfff;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 img.ratingFace {
-    margin-left: 25px;
-    margin-right: 10px;
-    height: 50px;
-    width: 50px;
-    border-radius: 4px;
-    margin-top: 10px;
+    margin-right: 20px;
+    height: 100px;
+    width: 100px;
+    border-radius: 8px;
+    object-fit: cover;
     float: left;
+    background-color: white;
 }
 
 h3.emptyRating {
     width: 400px;
     font-size: 1.5em;
-    margin: 0 auto;
+    margin: 30px auto;
     text-align: center;
-    margin-top: 18px;
 }
 
-h3.ratingName {
-    float: left;
-    width: 200px;
+h3.ratingName,
+h3.ratingOrigin,
+h3.ratingStar {
+    margin: 8px 0;
+    color: white;
+    font-size: 1.2em;
     font-weight: bold;
-    padding-left: 65px;
-    font-size: 1.5em;
-}
-
-h3.ratingAge {
-    float: right;
-    text-align: left;
-    width: 100px;
-    font-weight: bold;
-    padding-right: 40px;
-    font-size: 1.5em;
 }
 
 .rating:first-child {
