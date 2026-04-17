@@ -6,6 +6,9 @@ const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet');
 
+const fileUpload = require('express-fileupload');
+
+
 const session = require('express-session');
 
 const RedisStore = require('connect-redis').RedisStore;
@@ -41,6 +44,9 @@ redisClient.connect().then(() => {
     app.use(compression());
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
+
+    //Add the file upload
+    app.use(fileUpload());
 
     app.use(session({
         key: 'sessionid',
