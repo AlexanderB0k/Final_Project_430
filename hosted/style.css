@@ -264,3 +264,8 @@ h3.ratingStar {
 .rating:last-child {
     margin-bottom: 10px;
 }
+
+.notFound{
+    font-size: 2em;
+    font-weight: bold;
+}

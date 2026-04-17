@@ -18,6 +18,7 @@ const router = (app) => {
 
     app.get('/retrieve', mid.requiresLogin, controllers.FileModel.retrieveFile);
 
+    app.get('/*wild', controllers.notFound.notFound )
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 

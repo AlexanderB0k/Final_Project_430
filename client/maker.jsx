@@ -28,7 +28,7 @@ const handleRating = async (e, onAdded) => {
     const uploadResult = await uploadResponse.json();
 
     if (!uploadResponse.ok) {
-        helper.handleError(uploadResult.error || 'Image upload failed');
+        helper.handleError(uploadResult.error);
         return false;
     }
 
@@ -84,6 +84,21 @@ const HandleForm = (props) => {
         </form>
     );
 };
+
+//Create your profile
+const handleProfile = (props) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const displayName = e.target.querySelector('#displayName').value;
+    const 
+
+
+    helper.sendPost(e.target.action, { username, pass, pass2 });
+
+    return false;
+
+}
 
 const CreateList = (props) => {
     const [items, setItems] = useState([]);
@@ -145,6 +160,20 @@ const App = () => {
 
 const init = () => {
     const root = createRoot(document.getElementById('app'));
+    const profile = createRoot(document.getElementById('Profile'));
+
+    profile.addEventListener('click', (e) => {
+        e.preventDefault();
+        root.render(<LoginWindow />);
+        return false;
+    });
+
+    root.addEventListener('click', (e) => {
+        e.preventDefault();
+        root.render(<SignupWindow />);
+        return false;
+    });
+
     root.render(<App />);
 };
 
