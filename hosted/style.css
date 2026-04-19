@@ -169,20 +169,18 @@ nav {
 }
 
 #Message {
-    top: 120px;
-    width: 250px;
-    height: 650px;
-    position: absolute;
-    z-index: 200;
-    right: 0px;
-    overflow: hidden;
+    width: 750px;
+    margin: -10px auto 20px auto;
+    height: auto;
+    background: none;
+    overflow: visible;
+    text-align: left;
 }
 
 #Message h3 {
-    width: 200px;
-    position: absolute;
-    top: 0px;
-    left: 20px;
+    width: 100%;
+    margin: 0;
+    padding: 10px 0 0 0;
 }
 
 #speech {
@@ -192,19 +190,11 @@ nav {
 }
 
 #errorMessage {
+    display: block;
     font-size: 1.1em;
     font-weight: bold;
     color: red;
     font-style: italic;
-}
-
-#img {
-    z-index: 225;
-    margin-top: -20px;
-    margin-left: 135px;
-    height: 450px;
-    width: 300px;
-    transform: rotate(330deg);
 }
 
 .list {
@@ -265,7 +255,139 @@ h3.ratingStar {
     margin-bottom: 10px;
 }
 
-.notFound{
+.notFound {
     font-size: 2em;
     font-weight: bold;
+}
+
+#formatting {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT SIDE */
+.left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#content {
+    width: 100%;
+}
+
+.right-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f8fb;
+}
+
+
+#img {
+    max-width: 80%;
+    height: auto;
+}
+
+.profile-form {
+    max-width: 560px;
+    margin: 1rem auto;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.profile-form__photo-header {
+    background: #F76902;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.profile-form__avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px dashed #aaa;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+}
+
+.profile-form__avatar--filled {
+    border: none;
+}
+
+.profile-form__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-form__avatar-placeholder {
+    font-size: 11px;
+    color: #F76902;
+    text-align: center;
+}
+
+.profile-form__photo-hint {
+    font-size: 12px;
+    color: #F76902;
+    margin: 8px 0 0;
+}
+
+.profile-form__fields {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-form__field {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-form__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.profile-form__input,
+.profile-form__textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.profile-form__textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.profile-form__file-input {
+    display: none;
+}
+
+.profile-form__submit {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: #F76902;
+    color: white;
+    border: 1px solid #F76902;
 }

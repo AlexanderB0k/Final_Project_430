@@ -59,7 +59,6 @@ const retrieveFile = async (req, res) => {
     res.set({
         'Content-Type': doc.mimetype,
 
-
         'Content-Length': doc.size,
 
         'Content-Disposition': `inline; filename="${doc.name}"`,

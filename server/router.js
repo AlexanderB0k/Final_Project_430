@@ -4,6 +4,7 @@ const mid = require('./middleware');
 const router = (app) => {
     app.get('/getRatings', mid.requiresLogin, controllers.Rating.getRatings);
 
+
     app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
     app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
 
@@ -12,16 +13,23 @@ const router = (app) => {
     app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 
     app.get('/maker', mid.requiresLogin, controllers.Rating.makerPage);
+
     app.post('/maker', mid.requiresLogin, controllers.Rating.makeRating);
 
-    app.post('/upload', mid.requiresLogin, controllers.FileModel.uploadFile);
 
+
+    app.post('/upload', mid.requiresLogin, controllers.FileModel.uploadFile);
     app.get('/retrieve', mid.requiresLogin, controllers.FileModel.retrieveFile);
 
-    app.get('/*wild', controllers.notFound.notFound )
+    app.post('/profile', mid.requiresLogin, controllers.Profile.makerProfile);
+
+    app.get('/profile', mid.requiresLogin, controllers.Profile.profilePage);
+    app.get('/getProfiles', mid.requiresLogin, controllers.Profile.getProfiles);
+
+    app.post('/changePassword', mid.requiresLogin, controllers.Account.changePassword);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-
+    app.get('/*wild', controllers.notFound.notFound)
 }
 
 module.exports = router;

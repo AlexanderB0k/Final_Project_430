@@ -42,6 +42,8 @@ const getRatings = async (req, res) => {
     }
 };
 
+// change the password of the user 
+
 module.exports = {
     makerPage,
     makeRating,

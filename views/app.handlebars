@@ -10,17 +10,24 @@
 <body>
   <nav><a href="/login"><img id="logo" src="/assets/img/RITLogo.png" alt="face logo" /></a>
     <div class="navlink"><a href="/logout">Log out</a></div>
+    <!-- profile page is currently not implemented, so the link is commented out -->
+    <!-- <div class="navlink"><a href="/profile">Profile</a></div> -->
+    <div class="navlink"><a href="/maker">Make Rating</a></div>
   </nav>
 
   <section id="app">
 
   </section>
 
-  <div id="Message" class='hidden'>
-    <img id="speech" src="/assets/img/speech.png" alt="speech box" />
+  <div id="Message" class="hidden">
     <h3><span id="errorMessage"></span></h3>
-    <img id="img" src="/assets/img/RITLogo.png" alt="img" />
   </div>
+
+  <div id="SuccessMessage" class="hidden">
+    <h3><span id="successMessage"></span></h3>
+  </div>
+
+
   <script src="/assets/appBundle.js"></script>
 </body>
 

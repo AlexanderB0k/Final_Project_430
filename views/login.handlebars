@@ -1,25 +1,40 @@
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
   <title>Maker</title>
-  <link rel="shortcut icon" href="/assets/img/favicon.png"/>
-  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <link rel="shortcut icon" href="/assets/img/favicon.png" />
+  <link rel="stylesheet" type="text/css" href="/assets/style.css" />
 </head>
-<body> 
-  <nav><a href="/login"><img id="logo" src="/assets/img/RITLogo.png" alt="face logo"/></a>
+
+<body>
+  <nav><a href="/login"><img id="logo" src="/assets/img/RITLogo.png" alt="face logo" /></a>
     <div class="navlink"><a id="loginButton" href="/login">Login</a></div>
     <div class="navlink"><a id="signupButton" href="/signup">Sign up</a></div>
   </nav>
-  
-  <section id="content">
+
+
+  <section id="formatting">
+
+    <section class="left-section">
+
+      <h1>Welcome to RIT food Rater</h1>
+      <section id="content">
+      </section>
+      <div id="Message" class="hidden">
+        <h3><span id="errorMessage"></span></h3>
+      </div>
+
+      
+    </section>
+
+    <section class="right-section">
+      <img id="img" src="/assets/img/signup-login.png" alt="img" />
+    </section>
 
   </section>
 
-  <div id="Message" class='hidden'>
-    <img id="speech" src="/assets/img/speech.png" alt="speech box"/>
-    <h3><span id="errorMessage"></span></h3>
-    <img id="img" src="/assets/img/RITLogo.png" alt="img"/>
-  </div>
   <script src="/assets/loginBundle.js"></script>
 </body>
+
 </html>

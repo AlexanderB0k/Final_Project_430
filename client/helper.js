@@ -7,6 +7,11 @@ const handleError = (message) => {
     document.getElementById('Message').classList.remove('hidden');
 };
 
+const handleSuccess = (message) => {
+    document.getElementById('successMessage').textContent = message;
+    document.getElementById('Message').classList.remove('hidden');
+};
+
 /* Sends post requests to the server using fetch. Will look for various
    entries in the response JSON object, and will handle them appropriately.
 */
@@ -41,6 +46,7 @@ const hideError = () => {
 
 module.exports = {
     handleError,
+    handleSuccess,
     sendPost,
     hideError,
 };

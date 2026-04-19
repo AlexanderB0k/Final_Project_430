@@ -3,6 +3,7 @@ const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
+
 const handleRating = async (e, onAdded) => {
     e.preventDefault();
     helper.hideError();
@@ -40,7 +41,8 @@ const handleRating = async (e, onAdded) => {
             starRating,
             photo: uploadResult.fileId,
         },
-        onAdded
+        onAdded,
+        helper.handleSuccess('Rating added successfully!')
     );
 
     return false;
@@ -85,21 +87,6 @@ const HandleForm = (props) => {
     );
 };
 
-//Create your profile
-const handleProfile = (props) => {
-    e.preventDefault();
-    helper.hideError();
-
-    const displayName = e.target.querySelector('#displayName').value;
-    const 
-
-
-    helper.sendPost(e.target.action, { username, pass, pass2 });
-
-    return false;
-
-}
-
 const CreateList = (props) => {
     const [items, setItems] = useState([]);
 
@@ -143,6 +130,200 @@ const CreateList = (props) => {
     );
 };
 
+const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const oldPassword = e.target.querySelector('#oldPassword').value;
+    const newPassword = e.target.querySelector('#newPassword').value;
+    const newPassword2 = e.target.querySelector('#newPassword2').value;
+
+    if (!oldPassword || !newPassword || !newPassword2) {
+        helper.handleError('All fields are required!');
+        return false;
+    }
+
+    if (newPassword !== newPassword2) {
+        helper.handleError('Passwords do not match!');
+        return false;
+    }
+
+    if (newPassword === oldPassword) {
+        helper.handleError('New password must be different from the old password!');
+        return false;
+    }
+
+    helper.sendPost(
+        e.target.action,
+        {
+            oldPassword,
+            newPassword,
+            newPassword2,
+        },
+        onAdded(),
+        () => helper.handleSuccess('Password changed successfully!')
+    );
+
+    return false;
+};
+
+const ChangePasswordForm = () => {
+    return (
+        <form
+            id="changePasswordForm"
+            onSubmit={handlePasswordChange}
+            name="changePasswordForm"
+            action="/changePassword"
+            method="POST"
+            className="form"
+        >
+            <label htmlFor="oldPassword">Current Password: </label>
+            <input
+                id="oldPassword"
+                type="password"
+                name="oldPassword"
+                placeholder="Current Password"
+            />
+
+            <label htmlFor="newPassword">New Password: </label>
+            <input
+                id="newPassword"
+                type="password"
+                name="newPassword"
+                placeholder="New Password"
+            />
+
+            <label htmlFor="newPassword2">Confirm New Password: </label>
+            <input
+                id="newPassword2"
+                type="password"
+                name="newPassword2"
+                placeholder="Confirm New Password"
+            />
+
+            <input className="makeSubmit" type="submit" value="Change Password" />
+        </form>
+    );
+};
+
+//Create a profile for this user
+const handleProfile = async (e, onAdded) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const displayName = e.target.querySelector('#displayName').value;
+    const age = e.target.querySelector('#age').value;
+    const description = e.target.querySelector('#description').value;
+    const photoProfile = e.target.querySelector('#photoProfile').files[0];
+
+    if (!displayName || !age || !description || !photoProfile) {
+        helper.handleError('All fields are required!');
+        return false;
+    }
+
+    const uploadData = new FormData();
+    uploadData.append('sampleFile', photoProfile);
+
+    const uploadResponse = await fetch('/upload', { method: 'POST', body: uploadData });
+
+    if (!uploadResponse.ok) {
+        helper.handleError('Failed to upload photo!');
+        return false;
+    }
+
+    const uploadResult = await uploadResponse.json();
+
+    helper.sendPost(
+        e.target.action,
+        { displayName, age, description, photo: uploadResult.fileId },
+        onAdded,
+        () => helper.handleSuccess('Profile created successfully!')
+    );
+    return false;
+};
+
+const ProfileForm = (props) => {
+    const [preview, setPreview] = React.useState(null);
+
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) setPreview(URL.createObjectURL(file));
+    };
+
+    return (
+        <form
+            id="profileForm"
+            onSubmit={(e) => handleProfile(e, props.triggerReload)}
+            name="profileForm"
+            action="/profile"
+            method="POST"
+            className="profile-form"
+        >
+            <div className="profile-form__photo-header">
+                <div
+                    className={`profile-form__avatar ${preview ? 'profile-form__avatar--filled' : ''}`}
+                    onClick={() => document.getElementById('photoProfile').click()}
+                >
+                    {preview
+                        ? <img src={preview} alt="preview" className="profile-form__avatar-img" />
+                        : <span className="profile-form__avatar-placeholder">Upload</span>
+                    }
+                </div>
+                <p className="profile-form__photo-hint">Click to upload a photo</p>
+            </div>
+
+            <div className="profile-form__fields">
+                <div className="profile-form__field">
+                    <label htmlFor="displayName" className="profile-form__label">Display name</label>
+                    <input id="displayName" type="text" name="displayName" placeholder="How should we call you?" className="profile-form__input" />
+                </div>
+                <div className="profile-form__field">
+                    <label htmlFor="age" className="profile-form__label">Age</label>
+                    <input id="age" type="number" name="age" placeholder="Your age" className="profile-form__input" />
+                </div>
+                <div className="profile-form__field">
+                    <label htmlFor="description" className="profile-form__label">About you</label>
+                    <textarea id="description" name="description" placeholder="Tell us a bit about yourself..." rows={3} className="profile-form__textarea" />
+                </div>
+
+                <input id="photoProfile" type="file" name="photoProfile" accept="image/*" onChange={handlePhotoChange} className="profile-form__file-input" />
+
+                <input type="submit" value="Create profile" className="profile-form__submit" />
+            </div>
+        </form>
+    );
+};
+
+const ProfileList = (props) => {
+    const [profiles, setProfiles] = useState([]);
+
+    useEffect(() => {
+        const load = async () => {
+            const response = await fetch('/getProfiles');
+            const result = await response.json();
+            setProfiles(result.profiles);
+        };
+        load();
+    }, [props.reloadProfiles]);
+
+    if (profiles.length === 0) {
+        return <div className="list"><h3>No Profile Yet!</h3></div>;
+    }
+
+    return (
+        <div className="list">
+            {profiles.map((profile) => (
+                <div key={profile._id} className="profile">
+                    <img src={`/retrieve?_id=${profile.photo}`} alt={profile.displayName} className="profilePhoto" />
+                    <h3>Name: {profile.displayName}</h3>
+                    <h3>Age: {profile.age}</h3>
+                    <h3>About: {profile.description}</h3>
+                </div>
+            ))}
+        </div>
+    );
+};
+
 const App = () => {
     const [reload, setReload] = useState(false);
 
@@ -154,26 +335,25 @@ const App = () => {
             <div id="ratings">
                 <CreateList reloadRatings={reload} />
             </div>
+
+            <div id="changePassword">
+                <ChangePasswordForm />
+            </div>
+
+            <div id="createProfile">
+                <ProfileForm triggerReload={() => setReload(!reload)} />
+            </div>
+
+            <div id="profileList">
+                <ProfileList reloadProfiles={reload} />
+            </div>
         </div>
     );
 };
 
+
 const init = () => {
     const root = createRoot(document.getElementById('app'));
-    const profile = createRoot(document.getElementById('Profile'));
-
-    profile.addEventListener('click', (e) => {
-        e.preventDefault();
-        root.render(<LoginWindow />);
-        return false;
-    });
-
-    root.addEventListener('click', (e) => {
-        e.preventDefault();
-        root.render(<SignupWindow />);
-        return false;
-    });
-
     root.render(<App />);
 };
 
