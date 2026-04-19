@@ -15,20 +15,70 @@ const makerProfile = async (req, res) => {
     };
 
     try {
+        if (_id) {
+            const profile = await Profile.findOne({
+                _id,
+                owner: req.session.account._id,
+            });
+
+            if (!profile) {
+                return res.status(404).json({ error: 'Profile not found' });
+            }
+
+            profile.displayName = displayName;
+            profile.age = age;
+            profile.description = description;
+            profile.photo = photo;
+
+            await profile.save();
+
+            return res.status(200).json({
+                _id: profile._id,
+                displayName: profile.displayName,
+                age: profile.age,
+                description: profile.description,
+                photo: profile.photo,
+                owner: profile.owner,
+            });
+        }
+
+        // CREATE new profile
+        if (!photo) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        const profileData = {
+            displayName,
+            age,
+            description,
+            photo,
+            owner: req.session.account._id,
+        };
+
         const newProfile = new Profile(profileData);
         await newProfile.save();
-        return res.status(201).json({ displayName: newProfile.displayName, age: newProfile.age, description: newProfile.description, photo: newProfile.photo, owner: newProfile.owner });
+
+        return res.status(201).json({
+            _id: newProfile._id,
+            displayName: newProfile.displayName,
+            age: newProfile.age,
+            description: newProfile.description,
+            photo: newProfile.photo,
+            owner: newProfile.owner,
+        });
     } catch (err) {
         console.error(err);
+
         if (err.code === 11000) {
             return res.status(400).json({ error: 'Profile with that name already exists' });
         }
-        return res.status(500).json({ error: 'Error creating profile ' });
+
+        return res.status(500).json({ error: 'Error saving profile' });
     }
 };
 
 const profilePage = (req, res) => {
-    res.render('app'); 
+    res.render('app');
 };
 
 const getProfiles = async (req, res) => {

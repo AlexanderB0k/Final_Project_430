@@ -216,45 +216,88 @@ const handleProfile = async (e, onAdded) => {
     const description = e.target.querySelector('#description').value;
     const photoProfile = e.target.querySelector('#photoProfile').files[0];
 
-    if (!displayName || !age || !description || !photoProfile) {
+    if (!displayName || !age || !description) {
         helper.handleError('All fields are required!');
         return false;
     }
 
-    const uploadData = new FormData();
-    uploadData.append('sampleFile', photoProfile);
+    let photo = '';
 
-    const uploadResponse = await fetch('/upload', { method: 'POST', body: uploadData });
+    if (photoProfile) {
+        const uploadData = new FormData();
+        uploadData.append('sampleFile', photoProfile);
 
-    if (!uploadResponse.ok) {
-        helper.handleError('Failed to upload photo!');
-        return false;
+        const uploadResponse = await fetch('/upload', {
+            method: 'POST',
+            body: uploadData,
+        });
+
+        const uploadResult = await uploadResponse.json();
+
+        if (!uploadResponse.ok) {
+            helper.handleError(uploadResult.error);
+            return false;
+        }
+
+        photo = uploadResult.fileId;
     }
-
-    const uploadResult = await uploadResponse.json();
 
     helper.sendPost(
         e.target.action,
-        { displayName, age, description, photo: uploadResult.fileId },
-        onAdded,
-        () => helper.handleSuccess('Profile created successfully!')
+        {
+            displayName,
+            age,
+            description,
+            photo,
+        },
+        onProfileAdded
     );
+
     return false;
 };
 
+
 const ProfileForm = (props) => {
-    const [preview, setPreview] = React.useState(null);
+    const [preview, setPreview] = useState(null);
+    const [displayName, setDisplayName] = useState('');
+    const [age, setAge] = useState('');
+    const [description, setDescription] = useState('');
+
+    // Load existing profile data on mount and when reloadProfile changes
+    // This allows the form to be pre-filled with existing data when editing the profile
+    
+    useEffect(() => {
+        const loadProfile = async () => {
+            const response = await fetch('/getProfile');
+            const result = await response.json();
+
+            if (result.profile) {
+                setDisplayName(result.profile.displayName || '');
+                setAge(result.profile.age || '');
+                setDescription(result.profile.description || '');
+
+                if (result.profile.photo) {
+                    setPreview(`/retrieve?_id=${result.profile.photo}`);
+                } else {
+                    setPreview(null);
+                }
+            }
+        };
+
+        loadProfile();
+    }, [props.reloadProfile]);
 
     const handlePhotoChange = (e) => {
         const file = e.target.files[0];
-        if (file) setPreview(URL.createObjectURL(file));
+        if (file) {
+            setPreview(URL.createObjectURL(file));
+        }
     };
 
     return (
         <form
             id="profileForm"
             onSubmit={(e) => handleProfile(e, props.triggerReload)}
-            name="profileForm"
             action="/profile"
             method="POST"
             className="profile-form"
@@ -266,8 +309,7 @@ const ProfileForm = (props) => {
                 >
                     {preview
                         ? <img src={preview} alt="preview" className="profile-form__avatar-img" />
-                        : <span className="profile-form__avatar-placeholder">Upload</span>
-                    }
+                        : <span className="profile-form__avatar-placeholder">Upload</span>}
                 </div>
                 <p className="profile-form__photo-hint">Click to upload a photo</p>
             </div>
@@ -275,51 +317,87 @@ const ProfileForm = (props) => {
             <div className="profile-form__fields">
                 <div className="profile-form__field">
                     <label htmlFor="displayName" className="profile-form__label">Display name</label>
-                    <input id="displayName" type="text" name="displayName" placeholder="How should we call you?" className="profile-form__input" />
+                    <input
+                        id="displayName"
+                        type="text"
+                        name="displayName"
+                        className="profile-form__input"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                    />
                 </div>
+
                 <div className="profile-form__field">
                     <label htmlFor="age" className="profile-form__label">Age</label>
-                    <input id="age" type="number" name="age" placeholder="Your age" className="profile-form__input" />
+                    <input
+                        id="age"
+                        type="number"
+                        name="age"
+                        min="0"
+                        className="profile-form__input"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                    />
                 </div>
+
                 <div className="profile-form__field">
                     <label htmlFor="description" className="profile-form__label">About you</label>
-                    <textarea id="description" name="description" placeholder="Tell us a bit about yourself..." rows={3} className="profile-form__textarea" />
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows={3}
+                        className="profile-form__textarea"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
                 </div>
 
-                <input id="photoProfile" type="file" name="photoProfile" accept="image/*" onChange={handlePhotoChange} className="profile-form__file-input" />
+                <input
+                    id="photoProfile"
+                    type="file"
+                    name="photoProfile"
+                    accept="image/*"
+                    onChange={handlePhotoChange}
+                    className="profile-form__file-input"
+                />
 
-                <input type="submit" value="Create profile" className="profile-form__submit" />
+                <input type="submit" value="Save profile" className="profile-form__submit" />
             </div>
         </form>
     );
 };
 
-const ProfileList = (props) => {
-    const [profiles, setProfiles] = useState([]);
+const ProfileCard = (props) => {
+    const [profile, setProfile] = useState(null);
 
     useEffect(() => {
-        const load = async () => {
-            const response = await fetch('/getProfiles');
+        const loadProfile = async () => {
+            const response = await fetch('/getProfile');
             const result = await response.json();
-            setProfiles(result.profiles);
+            setProfile(result.profile);
         };
-        load();
-    }, [props.reloadProfiles]);
 
-    if (profiles.length === 0) {
-        return <div className="list"><h3>No Profile Yet!</h3></div>;
+        loadProfile();
+    }, [props.reloadProfile]);
+
+    if (!profile) {
+        return (
+            <div className="profile-display">
+                <h3>No profile created yet.</h3>
+            </div>
+        );
     }
 
     return (
-        <div className="list">
-            {profiles.map((profile) => (
-                <div key={profile._id} className="profile">
-                    <img src={`/retrieve?_id=${profile.photo}`} alt={profile.displayName} className="profilePhoto" />
-                    <h3>Name: {profile.displayName}</h3>
-                    <h3>Age: {profile.age}</h3>
-                    <h3>About: {profile.description}</h3>
-                </div>
-            ))}
+        <div className="profile-display">
+            <img
+                src={`/retrieve?_id=${profile.photo}`}
+                alt={profile.displayName}
+                className="profilePhoto"
+            />
+            <h3>Name: {profile.displayName}</h3>
+            <h3>Age: {profile.age}</h3>
+            <h3>About: {profile.description}</h3>
         </div>
     );
 };
@@ -341,11 +419,14 @@ const App = () => {
             </div>
 
             <div id="createProfile">
-                <ProfileForm triggerReload={() => setReload(!reload)} />
+                <ProfileForm
+                    reloadProfile={reload}
+                    triggerReload={() => setReload(!reload)}
+                />
             </div>
 
-            <div id="profileList">
-                <ProfileList reloadProfiles={reload} />
+            <div id="showProfile">
+                <ProfileCard reloadProfile={reload} />
             </div>
         </div>
     );

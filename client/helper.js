@@ -7,6 +7,7 @@ const handleError = (message) => {
     document.getElementById('Message').classList.remove('hidden');
 };
 
+//This isn't working for some reason, but it should be similar to handleError
 const handleSuccess = (message) => {
     document.getElementById('successMessage').textContent = message;
     document.getElementById('Message').classList.remove('hidden');
