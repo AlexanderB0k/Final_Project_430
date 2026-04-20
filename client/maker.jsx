@@ -130,81 +130,6 @@ const CreateList = (props) => {
     );
 };
 
-const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    helper.hideError();
-
-    const oldPassword = e.target.querySelector('#oldPassword').value;
-    const newPassword = e.target.querySelector('#newPassword').value;
-    const newPassword2 = e.target.querySelector('#newPassword2').value;
-
-    if (!oldPassword || !newPassword || !newPassword2) {
-        helper.handleError('All fields are required!');
-        return false;
-    }
-
-    if (newPassword !== newPassword2) {
-        helper.handleError('Passwords do not match!');
-        return false;
-    }
-
-    if (newPassword === oldPassword) {
-        helper.handleError('New password must be different from the old password!');
-        return false;
-    }
-
-    helper.sendPost(
-        e.target.action,
-        {
-            oldPassword,
-            newPassword,
-            newPassword2,
-        },
-        onAdded(),
-        () => helper.handleSuccess('Password changed successfully!')
-    );
-
-    return false;
-};
-
-const ChangePasswordForm = () => {
-    return (
-        <form
-            id="changePasswordForm"
-            onSubmit={handlePasswordChange}
-            name="changePasswordForm"
-            action="/changePassword"
-            method="POST"
-            className="form"
-        >
-            <label htmlFor="oldPassword">Current Password: </label>
-            <input
-                id="oldPassword"
-                type="password"
-                name="oldPassword"
-                placeholder="Current Password"
-            />
-
-            <label htmlFor="newPassword">New Password: </label>
-            <input
-                id="newPassword"
-                type="password"
-                name="newPassword"
-                placeholder="New Password"
-            />
-
-            <label htmlFor="newPassword2">Confirm New Password: </label>
-            <input
-                id="newPassword2"
-                type="password"
-                name="newPassword2"
-                placeholder="Confirm New Password"
-            />
-
-            <input className="makeSubmit" type="submit" value="Change Password" />
-        </form>
-    );
-};
 
 //Create a profile for this user
 const handleProfile = async (e, onAdded) => {
@@ -410,10 +335,6 @@ const App = () => {
             </div>
             <div id="ratings">
                 <CreateList reloadRatings={reload} />
-            </div>
-
-            <div id="changePassword">
-                <ChangePasswordForm />
             </div>
 
             <div id="createProfile">

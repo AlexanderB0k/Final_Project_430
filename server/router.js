@@ -17,14 +17,13 @@ const router = (app) => {
     app.post('/maker', mid.requiresLogin, controllers.Rating.makeRating);
 
 
-
     app.post('/upload', mid.requiresLogin, controllers.FileModel.uploadFile);
     app.get('/retrieve', mid.requiresLogin, controllers.FileModel.retrieveFile);
 
     app.post('/profile', mid.requiresLogin, controllers.Profile.makerProfile);
     app.get('/getProfiles', mid.requiresLogin, controllers.Profile.getProfiles);
 
-    app.post('/changePassword', mid.requiresLogin, controllers.Account.changePassword);
+    app.post('/forgotPassword', mid.requiresSecure, mid.requiresLogout, controllers.Account.forgotPassword);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
     app.get('/*wild', controllers.notFound.notFound)

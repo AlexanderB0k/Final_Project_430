@@ -28,55 +28,42 @@ const login = (req, res) => {
     });
 }
 
-const changePassword = async (req, res) => {
+const forgotPassword = (req, res) => {
+    const username = `${req.body.username}`;
     const oldPassword = `${req.body.oldPassword}`;
     const newPassword = `${req.body.newPassword}`;
     const newPassword2 = `${req.body.newPassword2}`;
 
-    if (!oldPassword || !newPassword || !newPassword2) {
+    if (!username || !oldPassword || !newPassword || !newPassword2) {
         return res.status(400).json({ error: 'All fields are required' });
     }
+
     if (newPassword !== newPassword2) {
-        return res.status(400).json({ error: 'New passwords do not match' });
-    }
-    if (newPassword === oldPassword) {
-        return res.status(400).json({ error: 'New password must be different from the old password' });
+        return res.status(400).json({ error: 'Passwords do not match' });
     }
 
-    try {
-        const accountId = req.session.account._id || req.session.account.id;
-        const account = await Account.findById(accountId);
+    if (oldPassword === newPassword) {
+        return res.status(400).json({ error: 'New password must be different from old password' });
+    }
 
-        if (!account) {
-            return res.status(404).json({ error: 'Account not found' });
+    Account.authenticate(username, oldPassword, async (err, account) => {
+        if (err || !account) {
+            return res.status(401).json({ error: 'Wrong username or password' });
         }
 
-        Account.authenticate(account.username, oldPassword, async (err, authenticatedAccount) => {
-            if (err || !authenticatedAccount) {
-                return res.status(401).json({ error: 'Current password is incorrect' });
-            }
+        try {
+            const hash = await Account.generateHash(newPassword);
 
-            try {
-                const hash = await Account.generateHash(newPassword);
+            await Account.findByIdAndUpdate(account._id, {
+                $set: { password: hash },
+            });
 
-                // Update the account's password with the new hash and return the updated account
-                //I looked at this documentation for findByIdAndUpdate: https://mongoosejs.com/docs/api/model.html#model_Model.findByIdAndUpdate
-                await Account.findByIdAndUpdate(
-                    accountId,
-                    { $set: { password: hash } },
-                    { new: true }
-                );
-
-                return res.json({ message: 'Password changed successfully' });
-            } catch (saveErr) {
-                console.error(saveErr);
-                return res.status(500).json({ error: 'An error occurred while changing the password' });
-            }
-        });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ error: 'An error occurred while changing the password' });
-    }
+            return res.json({ message: 'Password updated successfully' });
+        } catch (updateErr) {
+            console.error(updateErr);
+            return res.status(500).json({ error: 'An error occurred while updating password' });
+        }
+    });
 };
 
 
@@ -118,5 +105,5 @@ module.exports = {
     logout,
     login,
     signup,
-    changePassword,
+    forgotPassword,
 };

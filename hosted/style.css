@@ -183,6 +183,21 @@ nav {
     padding: 10px 0 0 0;
 }
 
+#Message2 {
+    width: 750px;
+    margin: -10px auto 20px auto;
+    height: auto;
+    background: none;
+    overflow: visible;
+    text-align: left;
+}
+
+#Message2 h3 {
+    width: 100%;
+    margin: 0;
+    padding: 10px 0 0 0;
+}
+
 #speech {
     height: 120px;
     width: 250px;

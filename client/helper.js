@@ -10,7 +10,7 @@ const handleError = (message) => {
 //This isn't working for some reason, but it should be similar to handleError
 const handleSuccess = (message) => {
     document.getElementById('successMessage').textContent = message;
-    document.getElementById('Message').classList.remove('hidden');
+    document.getElementById('Message2').classList.remove('hidden');
 };
 
 /* Sends post requests to the server using fetch. Will look for various
