@@ -22,8 +22,6 @@ const router = (app) => {
     app.get('/retrieve', mid.requiresLogin, controllers.FileModel.retrieveFile);
 
     app.post('/profile', mid.requiresLogin, controllers.Profile.makerProfile);
-
-    app.get('/profile', mid.requiresLogin, controllers.Profile.profilePage);
     app.get('/getProfiles', mid.requiresLogin, controllers.Profile.getProfiles);
 
     app.post('/changePassword', mid.requiresLogin, controllers.Account.changePassword);

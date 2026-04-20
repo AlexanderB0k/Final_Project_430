@@ -77,9 +77,6 @@ const makerProfile = async (req, res) => {
     }
 };
 
-const profilePage = (req, res) => {
-    res.render('app');
-};
 
 const getProfiles = async (req, res) => {
     try {
@@ -95,5 +92,4 @@ const getProfiles = async (req, res) => {
 module.exports = {
     makerProfile,
     getProfiles,
-    profilePage,
 };

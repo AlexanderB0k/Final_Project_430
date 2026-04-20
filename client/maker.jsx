@@ -265,7 +265,7 @@ const ProfileForm = (props) => {
 
     // Load existing profile data on mount and when reloadProfile changes
     // This allows the form to be pre-filled with existing data when editing the profile
-    
+
     useEffect(() => {
         const loadProfile = async () => {
             const response = await fetch('/getProfile');
@@ -304,19 +304,17 @@ const ProfileForm = (props) => {
         >
             <div className="profile-form__photo-header">
                 <div
-                    className={`profile-form__avatar ${preview ? 'profile-form__avatar--filled' : ''}`}
+                    className={`profile-form-avatar ${preview ? 'profile-formavatar--filled' : ''}`}
                     onClick={() => document.getElementById('photoProfile').click()}
                 >
-                    {preview
-                        ? <img src={preview} alt="preview" className="profile-form__avatar-img" />
-                        : <span className="profile-form__avatar-placeholder">Upload</span>}
+                    {preview ? <img src={preview} alt="preview" className="profile-form__avatar-img" /> : <span className="profile-form-photo-placeholder">Upload</span>}
                 </div>
                 <p className="profile-form__photo-hint">Click to upload a photo</p>
             </div>
 
-            <div className="profile-form__fields">
-                <div className="profile-form__field">
-                    <label htmlFor="displayName" className="profile-form__label">Display name</label>
+            <div className="profile-form-fields">
+                <div className="profile-form-field">
+                    <label htmlFor="displayName" className="profile-form__label">Resturant/Shops' Name</label>
                     <input
                         id="displayName"
                         type="text"
@@ -327,26 +325,26 @@ const ProfileForm = (props) => {
                     />
                 </div>
 
-                <div className="profile-form__field">
-                    <label htmlFor="age" className="profile-form__label">Age</label>
+                <div className="profile-form-field">
+                    <label htmlFor="age" className="profile-form-label">Rating</label>
                     <input
                         id="age"
                         type="number"
                         name="age"
                         min="0"
-                        className="profile-form__input"
+                        className="profile-form_input"
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
                     />
                 </div>
 
-                <div className="profile-form__field">
-                    <label htmlFor="description" className="profile-form__label">About you</label>
+                <div className="profile-form_field">
+                    <label htmlFor="description" className="profile-form-label">About the restaurant/shop</label>
                     <textarea
                         id="description"
                         name="description"
                         rows={3}
-                        className="profile-form__textarea"
+                        className="profile-form-textarea"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
@@ -361,7 +359,7 @@ const ProfileForm = (props) => {
                     className="profile-form__file-input"
                 />
 
-                <input type="submit" value="Save profile" className="profile-form__submit" />
+                <input type="submit" value="Save profile" className="profile-form-submit" />
             </div>
         </form>
     );
