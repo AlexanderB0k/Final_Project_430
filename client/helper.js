@@ -27,6 +27,7 @@ const sendPost = async (url, data, handler) => {
 
     const result = await response.json();
     document.getElementById('Message').classList.add('hidden');
+    document.getElementById('Message2').classList.add('hidden');
 
     if (result.redirect) {
         window.location = result.redirect;
@@ -34,6 +35,10 @@ const sendPost = async (url, data, handler) => {
 
     if (result.error) {
         handleError(result.error);
+    }
+
+    if (result.success) {
+        handleSuccess(result.success)
     }
 
     if (handler) {
@@ -45,9 +50,14 @@ const hideError = () => {
     document.getElementById('Message').classList.add('hidden');
 };
 
+const hideSuccess = () => {
+    document.getElementById('Message2').classList.add('hidden');
+}
+
 module.exports = {
     handleError,
     handleSuccess,
     sendPost,
     hideError,
+    hideSuccess,
 };

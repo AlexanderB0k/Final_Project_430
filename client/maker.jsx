@@ -54,7 +54,7 @@ const HandleForm = (props) => {
             id="form"
             onSubmit={(e) => handleRating(e, props.triggerReload)}
             name="form"
-            action="/maker"
+            action="/foodPlace"
             method="POST"
             className="form"
         >
@@ -130,203 +130,144 @@ const CreateList = (props) => {
     );
 };
 
-
-//Create a profile for this user
-const handleProfile = async (e, onAdded) => {
+const handleFoodPlace = async (e, onAdded) => {
     e.preventDefault();
     helper.hideError();
 
     const displayName = e.target.querySelector('#displayName').value;
-    const age = e.target.querySelector('#age').value;
     const description = e.target.querySelector('#description').value;
-    const photoProfile = e.target.querySelector('#photoProfile').files[0];
+    const rating = e.target.querySelector('#rating').value;
+    const photoFile = e.target.querySelector('#photo').files[0];
 
-    if (!displayName || !age || !description) {
+    if (!displayName || !description || !rating || !photoFile) {
         helper.handleError('All fields are required!');
         return false;
     }
 
-    let photo = '';
+    const uploadData = new FormData();
+    uploadData.append('sampleFile', photoFile);
 
-    if (photoProfile) {
-        const uploadData = new FormData();
-        uploadData.append('sampleFile', photoProfile);
+    const uploadResponse = await fetch('/upload', {
+        method: 'POST',
+        body: uploadData,
+    });
 
-        const uploadResponse = await fetch('/upload', {
-            method: 'POST',
-            body: uploadData,
-        });
+    const uploadResult = await uploadResponse.json();
 
-        const uploadResult = await uploadResponse.json();
-
-        if (!uploadResponse.ok) {
-            helper.handleError(uploadResult.error);
-            return false;
-        }
-
-        photo = uploadResult.fileId;
+    if (!uploadResponse.ok) {
+        helper.handleError(uploadResult.error);
+        return false;
     }
 
     helper.sendPost(
         e.target.action,
         {
             displayName,
-            age,
             description,
-            photo,
+            rating,
+            photo: uploadResult.fileId,
         },
-        onProfileAdded
+        onAdded,
+        helper.handleSuccess('Food place added successfully!')
     );
 
     return false;
 };
 
-
-const ProfileForm = (props) => {
-    const [preview, setPreview] = useState(null);
-    const [displayName, setDisplayName] = useState('');
-    const [age, setAge] = useState('');
-    const [description, setDescription] = useState('');
-
-    // Load existing profile data on mount and when reloadProfile changes
-    // This allows the form to be pre-filled with existing data when editing the profile
-
-    useEffect(() => {
-        const loadProfile = async () => {
-            const response = await fetch('/getProfile');
-            const result = await response.json();
-
-            if (result.profile) {
-                setDisplayName(result.profile.displayName || '');
-                setAge(result.profile.age || '');
-                setDescription(result.profile.description || '');
-
-                if (result.profile.photo) {
-                    setPreview(`/retrieve?_id=${result.profile.photo}`);
-                } else {
-                    setPreview(null);
-                }
-            }
-        };
-
-        loadProfile();
-    }, [props.reloadProfile]);
-
-    const handlePhotoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setPreview(URL.createObjectURL(file));
-        }
-    };
-
+const FoodPlaceForm = (props) => {
     return (
         <form
-            id="profileForm"
-            onSubmit={(e) => handleProfile(e, props.triggerReload)}
-            action="/profile"
+            id="foodPlaceForm"
+            onSubmit={(e) => handleFoodPlace(e, props.triggerReload)}
+            name="foodPlaceForm"
+            action="/foodPlace"
             method="POST"
-            className="profile-form"
-        >
-            <div className="profile-form__photo-header">
-                <div
-                    className={`profile-form-avatar ${preview ? 'profile-formavatar--filled' : ''}`}
-                    onClick={() => document.getElementById('photoProfile').click()}
-                >
-                    {preview ? <img src={preview} alt="preview" className="profile-form__avatar-img" /> : <span className="profile-form-photo-placeholder">Upload</span>}
-                </div>
-                <p className="profile-form__photo-hint">Click to upload a photo</p>
-            </div>
+            className="form"
+        >   <label htmlFor="photo">Photo: </label>
+            <input id="photo" type="file" name="photo" accept="image/*" />
 
-            <div className="profile-form-fields">
-                <div className="profile-form-field">
-                    <label htmlFor="displayName" className="profile-form__label">Resturant/Shops' Name</label>
-                    <input
-                        id="displayName"
-                        type="text"
-                        name="displayName"
-                        className="profile-form__input"
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                    />
-                </div>
+            <label htmlFor="displayName">Name: </label>
+            <input
+                id="displayName"
+                type="text"
+                name="displayName"
+                placeholder="Food Place Name"
+            />
 
-                <div className="profile-form-field">
-                    <label htmlFor="age" className="profile-form-label">Rating</label>
-                    <input
-                        id="age"
-                        type="number"
-                        name="age"
-                        min="0"
-                        className="profile-form_input"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                    />
-                </div>
+            <label htmlFor="description">Description: </label>
+            <input
+                id="description"
+                type="text"
+                name="description"
+                placeholder="Restaurant or food description"
+            />
 
-                <div className="profile-form_field">
-                    <label htmlFor="description" className="profile-form-label">About the restaurant/shop</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows={3}
-                        className="profile-form-textarea"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
+            <label htmlFor="rating">Rating: </label>
+            <input
+                id="rating"
+                type="number"
+                min="0"
+                max="5"
+                name="rating"
+                placeholder="0 to 5"
+            />
 
-                <input
-                    id="photoProfile"
-                    type="file"
-                    name="photoProfile"
-                    accept="image/*"
-                    onChange={handlePhotoChange}
-                    className="profile-form__file-input"
-                />
 
-                <input type="submit" value="Save profile" className="profile-form-submit" />
-            </div>
+
+            <input className="makeSubmit" type="submit" value="Add Food Place" />
         </form>
     );
 };
 
-const ProfileCard = (props) => {
-    const [profile, setProfile] = useState(null);
+const FoodPlaceList = (props) => {
+    const [items, setItems] = useState([]);
 
     useEffect(() => {
-        const loadProfile = async () => {
-            const response = await fetch('/getProfile');
+        const loadFromServer = async () => {
+            const response = await fetch('/getFoodPlace');
             const result = await response.json();
-            setProfile(result.profile);
+            setItems(result.foodPlace);
         };
 
-        loadProfile();
-    }, [props.reloadProfile]);
+        loadFromServer();
+    }, [props.reloadFoodPlace]);
 
-    if (!profile) {
+    if (items.length === 0) {
         return (
-            <div className="profile-display">
-                <h3>No profile created yet.</h3>
+            <div className="list">
+                <h3 className="emptyRating">No Food Places Yet!</h3>
             </div>
         );
     }
 
+    const nodes = items.map((foodPlace) => {
+        return (
+            <div key={foodPlace._id} className="foodplace">
+                <img
+                    src={`/retrieve?_id=${foodPlace.photo}`}
+                    alt={foodPlace.displayName}
+                    className="foodFace"
+                />
+                <h3>Name: {foodPlace.displayName}</h3>
+                <h3>Description: {foodPlace.description}</h3>
+                <h3>Rating: {foodPlace.rating}</h3>
+            </div>
+        );
+    });
+
     return (
-        <div className="profile-display">
-            <img
-                src={`/retrieve?_id=${profile.photo}`}
-                alt={profile.displayName}
-                className="profilePhoto"
-            />
-            <h3>Name: {profile.displayName}</h3>
-            <h3>Age: {profile.age}</h3>
-            <h3>About: {profile.description}</h3>
+        <div className="list">
+            {nodes}
         </div>
     );
 };
 
+
+
+
 const App = () => {
     const [reload, setReload] = useState(false);
+    const [reloadFoodPlace, setReloadFoodPlace] = useState(false);
 
     return (
         <div>
@@ -336,17 +277,13 @@ const App = () => {
             <div id="ratings">
                 <CreateList reloadRatings={reload} />
             </div>
-
-            <div id="createProfile">
-                <ProfileForm
-                    reloadProfile={reload}
-                    triggerReload={() => setReload(!reload)}
-                />
+            <div id="makeFoodPlace">
+                <FoodPlaceForm triggerReload={() => setReloadFoodPlace(!reloadFoodPlace)} />
+            </div>
+            <div id="foodPlaces">
+                <FoodPlaceList reloadFoodPlace={reloadFoodPlace} />
             </div>
 
-            <div id="showProfile">
-                <ProfileCard reloadProfile={reload} />
-            </div>
         </div>
     );
 };

@@ -4,7 +4,6 @@ const mid = require('./middleware');
 const router = (app) => {
     app.get('/getRatings', mid.requiresLogin, controllers.Rating.getRatings);
 
-
     app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
     app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
 
@@ -20,8 +19,8 @@ const router = (app) => {
     app.post('/upload', mid.requiresLogin, controllers.FileModel.uploadFile);
     app.get('/retrieve', mid.requiresLogin, controllers.FileModel.retrieveFile);
 
-    app.post('/profile', mid.requiresLogin, controllers.Profile.makerProfile);
-    app.get('/getProfiles', mid.requiresLogin, controllers.Profile.getProfiles);
+    app.post('/foodPlace', mid.requiresLogin, controllers.foodPlace.makerFoodPlace);
+    app.get('/getfoodPlace', mid.requiresLogin, controllers.foodPlace.getFoodPlace);
 
     app.post('/forgotPassword', mid.requiresSecure, mid.requiresLogout, controllers.Account.forgotPassword);
 

@@ -1,42 +1,29 @@
 const mongoose = require('mongoose');
-const _ = require('underscore');
 
-const setName = (name) => _.escape(name).trim();
-
-//Created a rating system with 
-const Schema = new mongoose.Schema({
-    displayName: {
-        type: String,
-        required: true,
-        trim: true,
-        set: setName,
-    },
-
-    age: {
-        type: Number,
-        required: true,
-        min: 0,
-    },
-
-    description: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-
-    photo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'FileModel',
-        required: true,
-    },
-
-
+const ProfileSchema = new mongoose.Schema({
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         required: true,
         ref: 'Account',
     },
 
+    name: {
+        type: String,
+        trim: true,
+        default: '',
+    },
+
+    age: {
+        type: Number,
+        min: 0,
+        default: 0,
+    },
+
+    info: {
+        type: String,
+        trim: true,
+        default: '',
+    },
     createdDate: {
         type: Date,
         default: Date.now,
@@ -44,13 +31,13 @@ const Schema = new mongoose.Schema({
 });
 
 Schema.statics.toAPI = (doc) => ({
-    displayName: doc.displayName,
+    name: doc.name,
     age: doc.age,
-    description: doc.description,
-    photo: doc.photo,
+    info: doc.info,
     owner: doc.owner,
-    createdDate: doc.createdDate,
+    createdDate: doc.createdDate
 });
 
 const ProfileModel = mongoose.model('Profile', Schema);
 module.exports = ProfileModel;
+
