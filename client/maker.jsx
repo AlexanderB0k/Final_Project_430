@@ -58,6 +58,7 @@ const HandleForm = (props) => {
             method="POST"
             className="form"
         >
+            <h1>Is this food good?</h1>
             <label htmlFor="name">Name: </label>
             <input id="name" type="text" name="name" placeholder="Food Name" />
 
@@ -118,7 +119,10 @@ const CreateList = (props) => {
                 />
                 <h3>Name: {rating.name}</h3>
                 <h3>Origin: {rating.originFood}</h3>
-                <h3>Star Rating: {rating.starRating}</h3>
+                <div>
+                <h3>Star Rating: {rating.starRating} </h3>
+                <img id="ratingStar" src="/assets/img/star.jpg" alt="star" />
+                </div>
             </div>
         );
     });
@@ -183,7 +187,11 @@ const FoodPlaceForm = (props) => {
             action="/foodPlace"
             method="POST"
             className="form"
-        >   <label htmlFor="photo">Photo: </label>
+        >   
+
+        <h1>Is this RIT food spot good???</h1>
+        
+        <label htmlFor="photo">Photo: </label>
             <input id="photo" type="file" name="photo" accept="image/*" />
 
             <label htmlFor="displayName">Name: </label>
@@ -273,13 +281,16 @@ const App = () => {
         <div>
             <div id="makeRating">
                 <HandleForm triggerReload={() => setReload(!reload)} />
-            </div>
-            <div id="ratings">
-                <CreateList reloadRatings={reload} />
-            </div>
+            </div>            
+            
             <div id="makeFoodPlace">
                 <FoodPlaceForm triggerReload={() => setReloadFoodPlace(!reloadFoodPlace)} />
             </div>
+
+            <div id="ratings">
+                <CreateList reloadRatings={reload} />
+            </div>
+
             <div id="foodPlaces">
                 <FoodPlaceList reloadFoodPlace={reloadFoodPlace} />
             </div>

@@ -1,5 +1,5 @@
 const model = require('../models')
-const Profile = models.Profile;
+const profile = model.Profile;
 
 const getProfile = async (req, res) => {
     try {
