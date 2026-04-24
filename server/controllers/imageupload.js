@@ -12,7 +12,6 @@ const uploadFile = async (req, res) => {
 
     const { sampleFile } = req.files;
 
-
     try {
         const newFile = new File(
             {

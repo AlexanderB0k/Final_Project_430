@@ -9,6 +9,11 @@ body {
     background-color: #f4f8fb;
 }
 
+h1 {
+    color: white;
+    font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial",
+}
+
 #logo {
     height: 40px;
     width: 40px;
@@ -352,7 +357,7 @@ img.foodFace {
     font-weight: bold;
 }
 
-.secondaryButton{
+.secondaryButton {
     transition: background-color 0.4s ease;
     display: block;
     text-align: center;
@@ -368,11 +373,76 @@ img.foodFace {
     cursor: pointer;
 }
 
-#ratingStar{
-    margin-left: 15px;
+.ratingStar {
+    margin-left: 5px;
+    width: 20px;
+    height: 20px;
 }
 
-#displayRating{
+#displayRating {
     display: flex;
-    text-align: left;
+    align-items: center;
+}
+
+.profileCard {
+    width: 90%;
+    background-color: #1e1e1e;
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.profileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.profileAge {
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+.profileBody {
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+.profileCardempty {
+    width: 90%;
+    background-color: #1e1e1e;
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    opacity: 0.7;
+}
+
+.ProfileContent {
+    display: flex;
+}
+
+.ProfilePic {
+    flex: 0 0 20%;
+}
+
+.ProfileItems {
+    flex: 0 0 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ProfileImage {
+    vertical-align: middle;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }

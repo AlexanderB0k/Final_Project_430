@@ -1,62 +1,44 @@
-const model = require('../models')
-const profile = model.Profile;
+const models = require('../models');
+const Profile = models.Profile;
 
 const getProfile = async (req, res) => {
     try {
         const query = { owner: req.session.account._id };
-        const docs = await Profile.find(query)
+
+        const doc = await Profile.findOne(query)
             .select('name info age')
             .lean()
             .exec();
 
-        return res.json({ foodPlace: docs });
+        return res.json({ profile: doc });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: 'Error fetching foodPlace' });
+        return res.status(500).json({ error: 'Error fetching profile' });
     }
 };
 
-const saveProfile = async (req, res) => {
-
+const saveProfile = async (req, res) => {    
     if (!req.body.name || !req.body.info || !req.body.age) {
         return res.status(400).json({ error: 'All fields are required' });
     }
+    
+    const { name, info, age } = req.body;
 
     try {
-        let profile = await Profile.findOne({ owner: req.session.account._id });
+        await Profile.findOneAndUpdate(
+            { owner: req.session.account._id },
+            { name, info, age, owner: req.session.account._id },
+            { upsert: true, new: true }
+        );
 
-        if (!profile) {
-            profile = new Profile({
-                owner: req.session.account._id,
-                name,
-                age,
-                description,
-            });
-        } else {
-            profile.name = name;
-            profile.age = age;
-            profile.description = description;
-        }
-
-        await profile.save();
         return res.json({ message: 'Profile saved successfully' });
     } catch (err) {
+        console.error(err);
         return res.status(500).json({ error: 'Error saving profile' });
     }
-};
-
-const updateProfileField = async (req, res) => {
-
-    if (!req.body.field || req.body.value === undefined) {
-        return res.status(400).json({ error: 'Field and value are required' });
-    }
-
-
 };
 
 module.exports = {
     getProfile,
     saveProfile,
-    updateProfileField,
 };
-

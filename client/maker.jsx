@@ -54,7 +54,7 @@ const HandleForm = (props) => {
             id="form"
             onSubmit={(e) => handleRating(e, props.triggerReload)}
             name="form"
-            action="/foodPlace"
+            action="/maker"
             method="POST"
             className="form"
         >
@@ -82,7 +82,6 @@ const HandleForm = (props) => {
 
             <label htmlFor="photo">Photo: </label>
             <input id="photo" type="file" name="photo" accept="image/*" />
-
             <input className="makeSubmit" type="submit" value="Make Rating" />
         </form>
     );
@@ -119,9 +118,9 @@ const CreateList = (props) => {
                 />
                 <h3>Name: {rating.name}</h3>
                 <h3>Origin: {rating.originFood}</h3>
-                <div>
-                <h3>Star Rating: {rating.starRating} </h3>
-                <img id="ratingStar" src="/assets/img/star.jpg" alt="star" />
+                <div id="displayRating">
+                    <h3>Star Rating: {rating.starRating}</h3>
+                    <img className="ratingStar" src="/assets/img/starImage.png" alt="star" />
                 </div>
             </div>
         );
@@ -187,12 +186,8 @@ const FoodPlaceForm = (props) => {
             action="/foodPlace"
             method="POST"
             className="form"
-        >   
-
-        <h1>Is this RIT food spot good???</h1>
-        
-        <label htmlFor="photo">Photo: </label>
-            <input id="photo" type="file" name="photo" accept="image/*" />
+        >
+            <h1 className=''>Is this RIT food spot good???</h1>
 
             <label htmlFor="displayName">Name: </label>
             <input
@@ -220,7 +215,8 @@ const FoodPlaceForm = (props) => {
                 placeholder="0 to 5"
             />
 
-
+            <label htmlFor="photo">Photo: </label>
+            <input id="photo" type="file" name="photo" accept="image/*" />
 
             <input className="makeSubmit" type="submit" value="Add Food Place" />
         </form>
@@ -258,7 +254,11 @@ const FoodPlaceList = (props) => {
                 />
                 <h3>Name: {foodPlace.displayName}</h3>
                 <h3>Description: {foodPlace.description}</h3>
-                <h3>Rating: {foodPlace.rating}</h3>
+
+                <div id="displayRating">
+                    <h3>Rating: {foodPlace.rating}</h3>
+                    <img className="ratingStar" src="/assets/img/starImage.png" alt="star" />
+                </div>
             </div>
         );
     });
@@ -270,27 +270,143 @@ const FoodPlaceList = (props) => {
     );
 };
 
+const AdSpaceHorizontal = () => {
+    <div class="Adspace-Horizontal">
+        <img className="adSpaceHorizontal" src="/assets/img/adSpace.jpg" alt="ad" />
+    </div>
+}
+
+const AdSpaceVertical = () => {
+    <div class="Adspace-Vertical">
+        <img className="adSpaceVertical" src="/assets/img/adSpace.jpg" alt="ad" />
+    </div>
+}
+
+const handleProfile = async (e, onAdded) => {
+    e.preventDefault();
+    helper.hideError();
+
+    const name = e.target.querySelector('#profileName').value;
+    const age = e.target.querySelector('#profileAge').value;
+    const info = e.target.querySelector('#profileInfo').value;
+
+    if (!name || !info || !age) {
+        helper.handleError('All fields are required!');
+        return false;
+    }
+
+    helper.sendPost(
+        e.target.action,
+        {
+            name,
+            info,
+            age
+        },
+        () => {
+            helper.handleSuccess('Updated the Profile');
+            onAdded();
+        }
+    );
+
+    return false;
+};
 
 
+const ProfileForm = (props) => {
+    return (
+        <form
+            id="profileForm"
+            onSubmit={(e) => handleProfile(e, props.onSuccess)}
+            name="profileForm"
+            action="/saveProfile"
+            method="POST"
+            className="form"
+        >
+            <h1 className='titleForm'>Create your own Profile</h1>
 
+            <label htmlFor="name">Name: </label>
+            <input id="profileName" type="text" name="name" />
+
+            <label htmlFor="age">Age: </label>
+            <input id="profileAge" type="number" name="age" min="0" />
+
+            <label htmlFor="info">Info: </label>
+            <input id="profileInfo" type="text" name="info" rows="3" />
+
+            <input type="submit" value="Save Profile" />
+
+        </form>
+    );
+};
+
+
+const ProfileDisplay = (props) => {
+    const [profile, setProfile] = useState(null);
+
+    const loadProfile = async () => {
+        const response = await fetch('/getProfile');
+        const data = await response.json();
+        setProfile(data.profile);
+    };
+
+    useEffect(() => {
+        loadProfile();
+    }, [props.reload]);
+
+    if (!profile) {
+        return (
+            <div className="profileCardempty">
+                <h2 className='profileHeader'>No Profile Yet</h2>
+                <p className='profileAge'>No Age</p>
+                <p className='profileBody'>No info</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="profileCard">
+            <div className='ProfileContent'>
+                <div className='ProfilePic'>
+                    <img className="ProfileImage" src="/assets/img/blankProfile.png" alt="star" />
+                </div>
+
+                <div className='ProfileItems'>
+                    <h2 className='profileHeader'>{profile.name}</h2>
+                    <p className='profileAge'>Age: {profile.age}</p>
+                    <p className='profileBody'>{profile.info}</p>
+
+                </div>
+            </div>
+
+        </div>
+    );
+};
 const App = () => {
     const [reload, setReload] = useState(false);
     const [reloadFoodPlace, setReloadFoodPlace] = useState(false);
+    const [reloadProfile, setReloadProfile] = useState(false);
 
     return (
         <div>
+            <div>
+                <ProfileForm onSuccess={() => setReloadProfile(!reloadProfile)} />
+
+                <ProfileDisplay reload={reloadProfile} />
+            </div>
             <div id="makeRating">
                 <HandleForm triggerReload={() => setReload(!reload)} />
-            </div>            
-            
+            </div>
+
             <div id="makeFoodPlace">
                 <FoodPlaceForm triggerReload={() => setReloadFoodPlace(!reloadFoodPlace)} />
             </div>
 
+            <h1>Rating list</h1>
             <div id="ratings">
                 <CreateList reloadRatings={reload} />
             </div>
 
+            <h1>Food List </h1>
             <div id="foodPlaces">
                 <FoodPlaceList reloadFoodPlace={reloadFoodPlace} />
             </div>

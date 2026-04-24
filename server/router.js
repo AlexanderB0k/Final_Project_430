@@ -22,6 +22,9 @@ const router = (app) => {
     app.post('/foodPlace', mid.requiresLogin, controllers.foodPlace.makerFoodPlace);
     app.get('/getfoodPlace', mid.requiresLogin, controllers.foodPlace.getFoodPlace);
 
+    app.get('/getProfile', mid.requiresLogin, controllers.Profile.getProfile);
+    app.post('/saveProfile', mid.requiresLogin, controllers.Profile.saveProfile);
+
     app.post('/forgotPassword', mid.requiresSecure, mid.requiresLogout, controllers.Account.forgotPassword);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

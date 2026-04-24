@@ -30,7 +30,7 @@ const ProfileSchema = new mongoose.Schema({
     },
 });
 
-Schema.statics.toAPI = (doc) => ({
+ProfileSchema.statics.toAPI = (doc) => ({
     name: doc.name,
     age: doc.age,
     info: doc.info,
