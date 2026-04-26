@@ -10,7 +10,7 @@ body {
 }
 
 h1 {
-    color: white;
+    color: black;
     font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial",
 }
 
@@ -218,9 +218,7 @@ nav {
 }
 
 .list {
-    border: 2px solid #7C878E;
-    border-radius: 7px;
-    width: 80%;
+    width: 90%;
     min-width: 400px;
     margin: 20px auto;
 }
@@ -426,6 +424,11 @@ img.foodFace {
     opacity: 0.7;
 }
 
+.titleForm {
+    color: white;
+    font-weight: 900;
+}
+
 .ProfileContent {
     display: flex;
 }
@@ -445,4 +448,46 @@ img.foodFace {
     width: 150px;
     height: 150px;
     border-radius: 50%;
+}
+
+.centerListText {
+    text-align: center;
+}
+
+.Adspace-Horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.adSpaceHorizontal {
+    width: 400px;
+    height: 100px;
+}
+
+.Adspace-Vertical {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.adSpaceVertical {
+    width: 100px;
+    height: 400px;
+}
+
+.formattingForAdandList {
+    display: flex;
+}
+
+.adFormatting {
+    flex: 0 0 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.listFormatting {
+    flex: 0 0 80%;
 }

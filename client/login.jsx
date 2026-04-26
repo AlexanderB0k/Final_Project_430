@@ -2,6 +2,7 @@ const helper = require('./helper.js');
 const React = require('react');
 const { createRoot } = require('react-dom/client');
 
+// This file handles the login and signup forms, as well as the forgot password form.
 const handleLogin = async (e) => {
     e.preventDefault();
     helper.hideError();
@@ -41,6 +42,8 @@ const handleSignup = (e) => {
     return false;
 };
 
+
+// The login window component
 const LoginWindow = (props) => {
     return (
         <form
@@ -68,6 +71,8 @@ const LoginWindow = (props) => {
     );
 };
 
+// The signup window component
+
 const SignupWindow = (props) => {
     return (
         <form
@@ -89,6 +94,7 @@ const SignupWindow = (props) => {
     );
 };
 
+//handle Passowrd forgot form submission
 const handlePasswordForgot = async (e) => {
     e.preventDefault();
     helper.hideError();
@@ -181,6 +187,7 @@ const init = () => {
 
     const root = createRoot(document.getElementById('content'));
 
+    //Renders the login form, and passes a function to show the forgot password form when the user clicks the "Change Password" button.
     const renderLogin = () => {
         root.render(
             <LoginWindow

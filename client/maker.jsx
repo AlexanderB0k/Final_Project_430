@@ -58,7 +58,7 @@ const HandleForm = (props) => {
             method="POST"
             className="form"
         >
-            <h1>Is this food good?</h1>
+            <h1 className='titleForm' >Is this food good?</h1>
             <label htmlFor="name">Name: </label>
             <input id="name" type="text" name="name" placeholder="Food Name" />
 
@@ -187,7 +187,7 @@ const FoodPlaceForm = (props) => {
             method="POST"
             className="form"
         >
-            <h1 className=''>Is this RIT food spot good???</h1>
+            <h1 className='titleForm'>Is this RIT food spot good???</h1>
 
             <label htmlFor="displayName">Name: </label>
             <input
@@ -271,16 +271,21 @@ const FoodPlaceList = (props) => {
 };
 
 const AdSpaceHorizontal = () => {
-    <div class="Adspace-Horizontal">
-        <img className="adSpaceHorizontal" src="/assets/img/adSpace.jpg" alt="ad" />
-    </div>
-}
+    return (
+        <div className="Adspace-Horizontal">
+            <img className="adSpaceHorizontal" src="/assets/img/adSpace.jpg" alt="ad" />
+        </div>
+    );
+};
 
 const AdSpaceVertical = () => {
-    <div class="Adspace-Vertical">
-        <img className="adSpaceVertical" src="/assets/img/adSpace.jpg" alt="ad" />
-    </div>
-}
+    return (
+        <div className="Adspace-Vertical">
+            <img className="adSpaceVertical" src="/assets/img/adSpace.jpg" alt="ad" />
+        </div>
+    );
+};
+
 
 const handleProfile = async (e, onAdded) => {
     e.preventDefault();
@@ -333,7 +338,7 @@ const ProfileForm = (props) => {
             <label htmlFor="info">Info: </label>
             <input id="profileInfo" type="text" name="info" rows="3" />
 
-            <input type="submit" value="Save Profile" />
+            <input className="makeSubmit" type="submit" value="Save Profile" />
 
         </form>
     );
@@ -356,9 +361,7 @@ const ProfileDisplay = (props) => {
     if (!profile) {
         return (
             <div className="profileCardempty">
-                <h2 className='profileHeader'>No Profile Yet</h2>
-                <p className='profileAge'>No Age</p>
-                <p className='profileBody'>No info</p>
+                <h1 className='titleForm'>No Profile yet</h1>
             </div>
         );
     }
@@ -381,44 +384,113 @@ const ProfileDisplay = (props) => {
         </div>
     );
 };
-const App = () => {
-    const [reload, setReload] = useState(false);
-    const [reloadFoodPlace, setReloadFoodPlace] = useState(false);
+const ProfilePage = () => {
     const [reloadProfile, setReloadProfile] = useState(false);
 
     return (
-        <div>
+        <>
             <div>
+                <AdSpaceHorizontal></AdSpaceHorizontal>
+            </div><div>
                 <ProfileForm onSuccess={() => setReloadProfile(!reloadProfile)} />
-
                 <ProfileDisplay reload={reloadProfile} />
-            </div>
-            <div id="makeRating">
-                <HandleForm triggerReload={() => setReload(!reload)} />
-            </div>
+            </div></>
+    );
+};
 
+const RatingPlace = () => {
+    const [reloadFoodPlace, setReloadFoodPlace] = useState(false);
+
+    return (
+        <div>
             <div id="makeFoodPlace">
                 <FoodPlaceForm triggerReload={() => setReloadFoodPlace(!reloadFoodPlace)} />
             </div>
 
-            <h1>Rating list</h1>
-            <div id="ratings">
-                <CreateList reloadRatings={reload} />
+            <div className='formattingForAdandList'>
+
+                <div className='adFormatting'>
+                    <AdSpaceVertical />
+                </div>
+                <div className='listFormatting'>
+                    <div className='centerListText'>
+                        <h1>Food List</h1>
+                    </div>
+
+                    <div id="foodPlaces">
+                        <FoodPlaceList reloadFoodPlace={reloadFoodPlace} />
+                    </div>
+                </div>
+
+                <div className='adFormatting'>
+                    <AdSpaceVertical />
+                </div>
+
+
             </div>
 
-            <h1>Food List </h1>
-            <div id="foodPlaces">
-                <FoodPlaceList reloadFoodPlace={reloadFoodPlace} />
+        </div>
+    );
+}
+
+const RatingPage = () => {
+    const [reload, setReload] = useState(false);
+
+    return (
+        <div>
+            <div id="makeRating">
+                <HandleForm triggerReload={() => setReload(!reload)} />
             </div>
+            <div className='formattingForAdandList'>
+                <div className='adFormatting'>
+                    <AdSpaceVertical />
+                </div>
+
+                <div className='listFormatting'>
+                    <div className='centerListText'>
+                        <h1>Food List</h1>
+                    </div>
+                    <div id="ratings">
+                        <CreateList reloadRatings={reload} />
+                    </div>
+                </div>
+
+                <div className='adFormatting'>
+                    <AdSpaceVertical />
+                </div>
+            </div>
+
 
         </div>
     );
 };
 
-
 const init = () => {
+    const foodButton = document.getElementById('foodButton');
+    const profileButton = document.getElementById('ProfileButton');
+    const ratePlaceButton = document.getElementById('ratePlaceButton')
+
     const root = createRoot(document.getElementById('app'));
-    root.render(<App />);
+
+    foodButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        root.render(<RatingPage />);
+        return false;
+    });
+
+    profileButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        root.render(<ProfilePage />);
+        return false;
+    });
+
+    ratePlaceButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        root.render(<RatingPlace />);
+        return false;
+    });
+
+    root.render(<RatingPage />);
 };
 
 window.onload = init;
